@@ -1,7 +1,4 @@
 NodeMatrix nodeMatrix;
-import processing.video.*;
-
-Capture video;
 
 void setup() {
   //size(1024, 768, P3D);
