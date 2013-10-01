@@ -13,7 +13,8 @@ class NodeMatrix {
   NodeMatrix(int _cellSize) {
     cellSize = _cellSize;
 
-    speed = 0.32;
+    //speed = 0.32;
+    speed = 0.5;
     textSz = 25;
     xPos = 0;
 
@@ -29,7 +30,7 @@ class NodeMatrix {
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
         Node n = new Node(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, cellSize);
-        n.setZSpeed(map(x, 0, cols, 0, .1));
+        n.setZSpeed(map(x, 0, cols, 0, .15));
         nodes.add(n);
       }
     }
@@ -95,11 +96,12 @@ class NodeMatrix {
   }
 
   void resetZAxis() {
-    if (frameCount % 4500 == 0) {
+    if (frameCount % 4000 == 0) {
       for (Node n : nodes) {
-        n.z = 0;
-        n.zSpeed = abs(n.zSpeed);
+        //n.z = 0;
+        //n.zSpeed = abs(n.zSpeed);
         //n.resetColor();
+        n.zSpeed = n.zSpeed * -1;
       }
     }
   }
