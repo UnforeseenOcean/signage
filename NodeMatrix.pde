@@ -1,19 +1,20 @@
 class NodeMatrix {
-  int rows, cols, cellSize;
+  int rows, cols, cellSize, textSz;
   float speed, xPos, contentWidth;
   ArrayList<Node> nodes;
   PImage img;
   PGraphics buffer;
   boolean useText = false;
   String txt;
-  int textSz = 30;
   int tweetIndex = 0;
   TwitterSearch tweets;
+  String searchQuery;
 
   NodeMatrix(int _cellSize) {
     cellSize = _cellSize;
 
-    speed = 0.04;
+    speed = 0.32;
+    textSz = 25;
     xPos = 0;
 
     ellipseMode(CENTER);
@@ -33,13 +34,18 @@ class NodeMatrix {
       }
     }
 
+    searchQuery = "this sucks";
     tweets = new TwitterSearch();
-    tweets.getSearchTweets("this sucks");
+    tweets.getSearchTweets(searchQuery, 10);
     nextItem();
   }
 
   void update() {
-    speed = map(mouseX, 0, width, 0, 1);
+    resetZAxis();
+
+    //textSz = (int) map(mouseY, 0, height, 10, 50);
+    //speed = map(mouseX, 0, width, 0, 1);
+
     buffer.beginDraw();
       buffer.background(255);
       if (useText == true) {
@@ -64,19 +70,38 @@ class NodeMatrix {
     if (xPos < contentWidth * -1) {
       nextItem();
     }
+
+
   }
 
   void nextItem() {
     setText(tweets.messages.get(tweetIndex));
     tweetIndex ++;
+
+    if (tweetIndex >= tweets.messages.size()) {
+      tweetIndex = 0;
+      if (searchQuery == "this sucks") {
+        searchQuery = "I love you";
+      } else {
+        searchQuery = "this sucks";
+      }
+      tweets.getSearchTweets(searchQuery, 10);
+    }
   }
 
   void randomGraphic() {
     setGraphic("test" + int(random(1, 6)) + ".gif");
     setZTarget(-1, 1);
-    //for (Node n : nodes) {
-      //n.resetColor();
-    //}
+  }
+
+  void resetZAxis() {
+    if (frameCount % 4500 == 0) {
+      for (Node n : nodes) {
+        n.z = 0;
+        n.zSpeed = abs(n.zSpeed);
+        //n.resetColor();
+      }
+    }
   }
 
   void setZTarget(int l, int u) {
@@ -118,8 +143,7 @@ class NodeMatrix {
     for (int i=0; i < nodes.size(); i++) {
       nodes.get(i).display();
     }
-
-    image(buffer, 20, 20);
+    //image(buffer, 20, 20);
   }
 
 }

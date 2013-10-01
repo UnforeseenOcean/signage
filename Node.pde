@@ -24,7 +24,14 @@ class Node {
   }
 
   void resetColor() {
-    c = color(noise(x)*255, noise(y)*255, 255);
+    int r = (int) random(1, 3);
+    if (r == 1) {
+      c = color(noise(x)*255, noise(y)*255, 255);
+    } else if (r == 2) {
+      c = color(noise(x)*255, 255, noise(y)*255);
+    } else if (r == 3) {
+      c = color(255, noise(x)*255, noise(y)*255);
+    }
   }
 
   void update() {
@@ -44,9 +51,6 @@ class Node {
     }
 
     z += zSpeed;
-    //if (int(s) == targetSize && finalTargetSize != targetSize) {
-      //targetSize = finalTargetSize;
-    //}
   }
 
   void display() {

@@ -45,11 +45,12 @@ class TwitterSearch {
   }
 
   // Search for tweets
-  void getSearchTweets(String queryStr) {
+  void getSearchTweets(String queryStr, int total) {
 
     try {
+      messages.clear();
       Query query = new Query(queryStr);
-      query.setCount(10); // Get 10 of the 100 search results
+      query.setCount(total); // Get 10 of the 100 search results
       QueryResult result = twitter.search(query);
       ArrayList tweets = (ArrayList) result.getTweets();
 
