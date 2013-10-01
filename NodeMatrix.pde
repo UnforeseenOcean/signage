@@ -13,8 +13,8 @@ class NodeMatrix {
   NodeMatrix(int _cellSize) {
     cellSize = _cellSize;
 
-    //speed = 0.32;
-    speed = 0.5;
+    speed = 0.32;
+    //speed = 0.5;
     textSz = 25;
     xPos = 0;
 
