@@ -16,12 +16,12 @@ class TwitterSearch {
   ArrayList<String> messages;
   RequestToken requestToken;
   // This is where you enter your Oauth info
-  String OAuthConsumerKey = "lfWsUElOsrk59DRojRdHA";
-  String OAuthConsumerSecret = "jp6ERtNz7bNUxQthKPi7JyjC8r3P2BaU1843Oc";
+  String OAuthConsumerKey = "";
+  String OAuthConsumerSecret = "";
 
   // This is where you enter your Access Token info
-  String AccessToken = "1919167711-tYWAbjsC77Kp634AA9NODUHZUScsLNIBhlKE5lo";
-  String AccessTokenSecret = "opQaqnToWSKcwczFJ7pRbLb6wzacgKbIBlArIeAnBM";
+  String AccessToken = "";
+  String AccessTokenSecret = "";
 
   Twitter twitter;
 
