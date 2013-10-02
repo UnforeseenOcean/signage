@@ -6,6 +6,8 @@ class NodeMatrix {
   PGraphics buffer;
   boolean useText = false;
   String txt;
+  boolean reverse = false;
+
   int tweetIndex = 0;
   TwitterSearch tweets;
   String searchQuery;
@@ -26,7 +28,7 @@ class NodeMatrix {
 
     buffer = createGraphics(cols, rows);
 
-    nodes = new ArrayList();
+    nodes = new ArrayList<Node>();
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
         Node n = new Node(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, cellSize);
@@ -37,15 +39,18 @@ class NodeMatrix {
 
     searchQuery = "this sucks";
     tweets = new TwitterSearch();
-    tweets.getSearchTweets(searchQuery, 10);
+    tweets.getSearchTweets(searchQuery, 5);
     nextItem();
+  }
+
+  void inverse() {
+    reverse = !reverse;
   }
 
   void update() {
     resetZAxis();
 
     //textSz = (int) map(mouseY, 0, height, 10, 50);
-    //speed = map(mouseX, 0, width, 0, 1);
 
     buffer.beginDraw();
       buffer.background(255);
@@ -63,19 +68,22 @@ class NodeMatrix {
 
     for (int i = 0; i < buffer.pixels.length; i ++) {
       color c = buffer.pixels[i];
-      float sz = map(brightness(c), 0, 255, cellSize - 1, 1);
-      //float sz = map(brightness(c), 0, 255, 1, cellSize - 1);
+      float sz;
+      if (reverse) {
+        sz = map(brightness(c), 0, 255, 1, cellSize - 1);
+      } else {
+        sz = map(brightness(c), 0, 255, cellSize - 1, 1);
+      }
       nodes.get(i).setSize((int) sz);
     }
 
     if (xPos < contentWidth * -1) {
       nextItem();
     }
-
-
   }
 
   void nextItem() {
+    //to do: replace with a generic list of messages
     setText(tweets.messages.get(tweetIndex));
     tweetIndex ++;
 
@@ -86,7 +94,7 @@ class NodeMatrix {
       } else {
         searchQuery = "this sucks";
       }
-      tweets.getSearchTweets(searchQuery, 10);
+      tweets.getSearchTweets(searchQuery, 5);
     }
   }
 
@@ -98,9 +106,6 @@ class NodeMatrix {
   void resetZAxis() {
     if (frameCount % 4000 == 0) {
       for (Node n : nodes) {
-        //n.z = 0;
-        //n.zSpeed = abs(n.zSpeed);
-        //n.resetColor();
         n.zSpeed = n.zSpeed * -1;
       }
     }
@@ -142,8 +147,8 @@ class NodeMatrix {
 
   void display() {
     background(0, 0, 0);
-    for (int i=0; i < nodes.size(); i++) {
-      nodes.get(i).display();
+    for (Node n : nodes) {
+      n.display();
     }
     //image(buffer, 20, 20);
   }

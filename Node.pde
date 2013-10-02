@@ -9,7 +9,8 @@ class Node {
     y = _y;
     s = 1.0;
     c = color(noise(x)*255, noise(y)*255, 255);
-    speed = random(0.45, 0.8);
+    //c = color(noise(float(x)/120)*255, noise(float(x)/120)*255, 255);
+    speed = random(.6, 1);
     upperZ = 50;
     lowerZ = -50;
   }
@@ -35,11 +36,11 @@ class Node {
   }
 
   void update() {
-    if (int(s) < targetSize) {
-      s += speed;
-    } else if (int(s) > targetSize) {
-      s -= speed;
-    }
+    //if (int(s) < targetSize) {
+      //s += speed;
+    //} else if (int(s) > targetSize) {
+      //s -= speed;
+    //}
 
 
     if (z > upperZ) {
