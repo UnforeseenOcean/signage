@@ -12,12 +12,32 @@ class NodeMatrix {
   TwitterSearch tweets;
   String searchQuery;
 
+  StringList messages;
+  int messageIndex = 0;
+
+  String[] queries = {
+    "\"I love you\"",
+    "\"I hate the government\"",
+    "\"I'm so proud of you\"",
+    "\"I see a celebrity\"",
+    "\"storm the castle\"",
+    "\"This sucks\"",
+    "\"I'm a people person\"",
+    "\"What day is it\"",
+    "\"The government killed\"",
+    "\"I miss you\"",
+    "\"can I borrow some money\"",
+    "\"Follow your dreams\""
+  };
+
+  int queryIndex = 0;
+
   NodeMatrix(int _cellSize) {
     cellSize = _cellSize;
 
-    speed = 0.32;
+    speed = 0.42;
     //speed = 0.5;
-    textSz = 25;
+    textSz = 20;
     xPos = 0;
 
     ellipseMode(CENTER);
@@ -37,10 +57,17 @@ class NodeMatrix {
       }
     }
 
-    searchQuery = "this sucks";
+    messages = new StringList();
+    
+    queryIndex = (int) random(0, 10);
+    searchQuery = queries[queryIndex];
     tweets = new TwitterSearch();
-    tweets.getSearchTweets(searchQuery, 5);
+    tweets.getSearchTweets(searchQuery, 10);
     nextItem();
+  }
+
+  void populateMessages() {
+
   }
 
   void inverse() {
@@ -58,7 +85,8 @@ class NodeMatrix {
         buffer.fill(0);
         buffer.textAlign(LEFT, TOP);
         buffer.textSize(textSz);
-        buffer.text(txt, xPos, 0);
+        buffer.text(txt, xPos, -2);
+        buffer.text(txt, textWidth(txt)*-1 + buffer.width - xPos, buffer.height/2 - 5);
       } else {
         buffer.image(img, xPos, 0);
       }
@@ -84,17 +112,16 @@ class NodeMatrix {
 
   void nextItem() {
     //to do: replace with a generic list of messages
-    setText(tweets.messages.get(tweetIndex));
+    setText(clean(tweets.messages.get(tweetIndex)));
     tweetIndex ++;
 
     if (tweetIndex >= tweets.messages.size()) {
       tweetIndex = 0;
-      if (searchQuery == "this sucks") {
-        searchQuery = "I love you";
-      } else {
-        searchQuery = "this sucks";
+      queryIndex ++;
+      if (queryIndex >= queries.length) {
+        queryIndex = 0;
       }
-      tweets.getSearchTweets(searchQuery, 5);
+      tweets.getSearchTweets(queries[queryIndex], 10);
     }
   }
 
@@ -143,6 +170,23 @@ class NodeMatrix {
 
     buffer = createGraphics(cols, rows);
     xPos = buffer.width;
+  }
+
+  String clean(String s) {
+    //println(s);
+    s = s.replaceAll("\n|\r", "");
+    s = s.replaceAll("(@)((?:[A-Za-z0-9-_]*))", "");
+    //s = s.replaceAll("@(\\w)+(\\s+)|(\\s+)+@(\\w)+", "");
+    //s = s.replaceAll("( *)(http)(\\S+ *)", "");
+    s = s.replaceAll("(http(s)?://)?([\\w-]+\\.)+[\\w-]+(/\\S\\w[\\w- ;,./?%&=]\\S*)?", "");
+    s = s.replaceAll("RT:", "");
+    s = s.replaceAll("RT", "");
+    s = s.replaceAll(": ", "");
+    s = s.replaceAll("faggot|nigger", "");
+    s = s.replaceAll("(#)((?:[A-Za-z0-9-_]*))", "");
+    s = trim(s);
+
+    return s;
   }
 
   void display() {

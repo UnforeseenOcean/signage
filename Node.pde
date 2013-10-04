@@ -8,9 +8,11 @@ class Node {
     x = _x;
     y = _y;
     s = 1.0;
-    c = color(noise(x)*255, noise(y)*255, 255);
+    colorMode(HSB);
+    c = color(map(y, 0, height, 100, 255), 255, 255);
+    //c = color(55, noise(y)*255, 255);
     //c = color(noise(float(x)/120)*255, noise(float(x)/120)*255, 255);
-    speed = random(.6, 1);
+    speed = 4;//random(3, 5);
     upperZ = 50;
     lowerZ = -50;
   }
@@ -36,11 +38,12 @@ class Node {
   }
 
   void update() {
-    //if (int(s) < targetSize) {
+    if (int(s) < targetSize) {
+      s = targetSize;
       //s += speed;
-    //} else if (int(s) > targetSize) {
-      //s -= speed;
-    //}
+    } else if (int(s) > targetSize) {
+      s -= speed;
+    }
 
 
     if (z > upperZ) {
@@ -57,7 +60,7 @@ class Node {
   void display() {
     update();
     pushMatrix();
-      translate(0, 0, z);
+      translate(0, z, z);
       fill(c);
       noStroke();
       ellipse(x, y, s, s);
